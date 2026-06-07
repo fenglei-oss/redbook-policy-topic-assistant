@@ -4,8 +4,18 @@ export interface GeneratedPost {
   id: string;
   styleName: string;
   description: string;
+  cover: GeneratedCover;
   title: string;
   body: string;
+}
+
+export interface GeneratedCover {
+  mode: 'editorial' | 'swiss' | 'discussion';
+  label: string;
+  headline: string;
+  subhead: string;
+  meta: string;
+  points: string[];
 }
 
 function trimTitle(title: string): string {
@@ -17,11 +27,25 @@ function trimTitle(title: string): string {
   return cleanTitle.length > 20 ? `${cleanTitle.slice(0, 19)}…` : cleanTitle;
 }
 
+function shortCoverTitle(title: string): string {
+  return trimTitle(title)
+    .replace(/服务|建设|工作|进展/g, '')
+    .slice(0, 18);
+}
+
 function buildMediaStylePost(hotspot: ScoredHotspot): GeneratedPost {
   return {
     id: 'media',
     styleName: '主流媒体风格',
     description: '偏通俗叙述，配合简洁分析',
+    cover: {
+      mode: 'editorial',
+      label: '热点速读',
+      headline: shortCoverTitle(hotspot.title),
+      subhead: '把主流媒体信息讲清楚',
+      meta: `${hotspot.source} / ${hotspot.trend}`,
+      points: ['发生了什么', '为何值得看', '后续看哪里']
+    },
     title: trimTitle(hotspot.title),
     body: `【发生了什么】
 ${hotspot.summary}
@@ -44,6 +68,14 @@ function buildKnowledgeStylePost(hotspot: ScoredHotspot): GeneratedPost {
     id: 'knowledge',
     styleName: '硬核知识风格',
     description: '科普前因后果、政策背景和可能影响',
+    cover: {
+      mode: 'swiss',
+      label: 'POLICY NOTE',
+      headline: shortCoverTitle(`${hotspot.title}怎么理解`),
+      subhead: '前因后果 / 影响路径 / 观察点',
+      meta: `HOT ${hotspot.hotScore} · POTENTIAL ${hotspot.potentialScore}`,
+      points: ['背景', '影响', '落地']
+    },
     title: trimTitle(`${hotspot.title}怎么理解`),
     body: `【发生了什么】
 ${hotspot.summary}
@@ -69,6 +101,14 @@ function buildDiscussionStylePost(hotspot: ScoredHotspot): GeneratedPost {
     id: 'discussion',
     styleName: '叙述讨论风格',
     description: '先讲清事件，再给出温和讨论问题',
+    cover: {
+      mode: 'discussion',
+      label: '今日议题',
+      headline: shortCoverTitle(`${hotspot.title}值得看`),
+      subhead: '这件事可以怎样理解？',
+      meta: `${hotspot.sentiment} / 温和讨论`,
+      points: ['政策初衷', '执行细节', '公众反馈']
+    },
     title: trimTitle(`${hotspot.title}值得看`),
     body: `【发生了什么】
 ${hotspot.content}

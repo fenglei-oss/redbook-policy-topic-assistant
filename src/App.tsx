@@ -138,6 +138,22 @@ function App() {
             <div className="generated-version-grid">
               {generatedPosts.map((post) => (
                 <article className="generated-box" key={post.id}>
+                  <div className={`xhs-cover xhs-cover-${post.cover.mode}`}>
+                    <div className="xhs-cover-top">
+                      <span>{post.cover.label}</span>
+                      <small>3:4 首页图</small>
+                    </div>
+                    <div className="xhs-cover-body">
+                      <h3>{post.cover.headline}</h3>
+                      <p>{post.cover.subhead}</p>
+                    </div>
+                    <div className="xhs-cover-points">
+                      {post.cover.points.map((point) => (
+                        <span key={point}>{point}</span>
+                      ))}
+                    </div>
+                    <div className="xhs-cover-meta">{post.cover.meta}</div>
+                  </div>
                   <div className="generated-header">
                     <div>
                       <span className="version-label">{post.styleName}</span>
