@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "fetch:news": "node scripts/fetchLatestNews.mjs",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },

@@ -3,7 +3,7 @@ export type Trend = '快速上升' | '上升' | '平稳' | '回落';
 export interface Hotspot {
   id: number;
   title: string;
-  source: '新华社' | '人民日报' | '中央广播电视总台' | '求是杂志社' | '光明日报';
+  source: '新华社' | '人民日报' | '中央广播电视总台' | '求是杂志社' | '光明日报' | '学习强国' | '中国共产党员网';
   publishedAt: string;
   content: string;
   url: string;
@@ -18,6 +18,14 @@ export interface Hotspot {
 export interface ScoredHotspot extends Hotspot {
   hotScore: number;
   potentialScore: number;
+  editorialFitScore: number;
+  editorialFitReason: string;
+  editorialAdvice: {
+    noteType: string;
+    coverAngle: string;
+    opening: string;
+    avoid: string;
+  };
 }
 
 export const mockHotspots: Hotspot[] = [
