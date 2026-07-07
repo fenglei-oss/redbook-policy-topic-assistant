@@ -113,7 +113,7 @@ async function copyPresentation() {
 }
 
 async function writeReadme() {
-  const readme = `# 实政评论类小红书选题助手离线包
+  const readme = `# 时政评论类小红书选题助手离线包
 
 这个压缩包可拷贝给非本机用户，在无互联网环境下浏览当前 Demo。
 
