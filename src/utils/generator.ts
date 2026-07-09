@@ -19,6 +19,12 @@ export interface GeneratedCover {
   points: string[];
 }
 
+const COVER_MODE_BY_POST = {
+  media: 'editorial',
+  knowledge: 'swiss',
+  discussion: 'discussion'
+} as const satisfies Record<GeneratedPost['id'], GeneratedCover['mode']>;
+
 function trimTitle(title: string): string {
   const cleanTitle = title
     .replace(/[，。；：、“”《》]/g, '')
@@ -151,13 +157,8 @@ function buildBriefContext(brief: EditorialBrief, strategy: TopicStrategy) {
       ? '一图讲清'
       : '';
   const formatLine = `发布节奏按“${brief.publishCadence}”，笔记形态用“${brief.noteFormat}”，证据要求为“${brief.evidenceRequirement}”。`;
-  const coverMode: GeneratedCover['mode'] = strategy.coverStyle === '红蓝政务'
-    ? 'swiss'
-    : strategy.coverStyle === '时间线'
-      ? 'discussion'
-      : 'editorial';
 
-  return { voice, ending, boundary, titlePrefix, formatLine, coverMode };
+  return { voice, ending, boundary, titlePrefix, formatLine };
 }
 
 function applyTitleTone(title: string, prefix: string): string {
@@ -175,7 +176,7 @@ function buildMediaStylePost(hotspot: ScoredHotspot, brief: EditorialBrief, stra
     styleName: '主流媒体风格',
     description: `${brief.accountPosition} · ${brief.noteFormat}`,
     cover: {
-      mode: context.coverMode,
+      mode: COVER_MODE_BY_POST.media,
       label: '热点速读',
       headline: shortCoverTitle(hotspot.title),
       subhead: coverSubhead(hotspot.title, '把主流媒体信息讲清楚'),
@@ -206,7 +207,7 @@ function buildKnowledgeStylePost(hotspot: ScoredHotspot, brief: EditorialBrief, 
     styleName: '硬核知识风格',
     description: `${strategy.preferredSubject} · ${strategy.titleTone}`,
     cover: {
-      mode: context.coverMode,
+      mode: COVER_MODE_BY_POST.knowledge,
       label: '硬核拆解',
       headline: shortCoverTitle(hotspot.title),
       subhead: coverSubhead(hotspot.title, '前因后果 · 影响路径 · 观察点'),
@@ -243,7 +244,7 @@ function buildDiscussionStylePost(hotspot: ScoredHotspot, brief: EditorialBrief,
     styleName: '叙述讨论风格',
     description: `${brief.targetReader} · ${brief.publishCadence}`,
     cover: {
-      mode: context.coverMode,
+      mode: COVER_MODE_BY_POST.discussion,
       label: '一起讨论',
       headline: shortCoverTitle(hotspot.title),
       subhead: coverSubhead(hotspot.title, '这件事可以怎样理解？'),
